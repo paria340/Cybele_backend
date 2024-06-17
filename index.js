@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const express = require('express');
 const cors = require('cors');
+const userRoutes = require('./routes/UserRoutes');
 const dotenv = require('dotenv');
 dotenv.config();
 
@@ -9,7 +10,7 @@ const PORT = process.env.PORT || 9000;
 
 app.use(cors());
 app.use(express.json());
-
+app.use('/api', userRoutes);
 
 mongoose.connect(process.env.ATLAS_CONNECTION)
   .then(() => {
@@ -25,6 +26,3 @@ app.get('/', (req, res) => {
 app.listen(PORT, ()=>{
   console.log(`Successfully served on port: ${PORT}.`);
 })
-
-const userRoutes = require('./routes/UserRoutes');
-app.use('/api', userRoutes);
