@@ -20,9 +20,9 @@ mongoose.connect(process.env.ATLAS_CONNECTION)
   });
 
 app.get('/', (req, res) => {
-  res.send('API is running...');
+  res.send('Test API is running...');
 });
 
-app.listen(PORT, ()=>{
+app.listen(PORT, () => {
   console.log(`Successfully served on port: ${PORT}.`);
 })
