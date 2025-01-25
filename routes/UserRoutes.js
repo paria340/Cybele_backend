@@ -4,6 +4,7 @@ const responses = require('../response');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const jwtSecret = 'your_jwt_secret_key';
+const RecommendationModel = require('../models/RecommendationModel'); // Import AI Model
 
 const router = express.Router();
 
@@ -69,6 +70,31 @@ router.get('/users/:id', async (req, res) => {
         message: responses[distance].message,
         tips: responses[distance].tips,
         trainingPlan: responses[distance].trainingPlan,
+      });
+    } else {
+      res.status(404).json({ message: 'User not found' });
+    }
+  } catch (error) {
+    res.status(400).send(error);
+  }
+});
+
+// Get user data and recommendations
+router.get('/users/:id', async (req, res) => {
+  try {
+    const user = await User.findById(req.params.id);
+    if (user) {
+      const distance = user.distance;
+
+      // Fetch AI recommendations
+      const recommendations = await RecommendationModel.generateRecommendations(user);
+
+      res.status(200).json({
+        user,
+        message: responses[distance].message,
+        tips: responses[distance].tips,
+        trainingPlan: responses[distance].trainingPlan,
+        recommendations,
       });
     } else {
       res.status(404).json({ message: 'User not found' });
